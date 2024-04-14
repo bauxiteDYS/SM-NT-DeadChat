@@ -10,7 +10,7 @@ public Plugin myinfo =
 	name        = "NT Dead Chat Spec",
 	author      = "Root, ported to NT by bauxite",
 	description = "Allows dead players to text chat with living teammates, spectators can always chat with everyone",
-	version     = "0.1.0.spec",
+	version     = "0.1.1.spec",
 };
 
 public OnPluginStart()
