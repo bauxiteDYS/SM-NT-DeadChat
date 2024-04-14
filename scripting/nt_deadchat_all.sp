@@ -9,7 +9,7 @@ public Plugin:myinfo =
 	name        = "NT Dead Chat All",
 	author      = "Root, ported to NT by bauxite",
 	description = "Allows dead players to text chat with the living",
-	version     = "2.0",
+	version     = "0.1.0.all",
 }
 
 public OnPluginStart()
