@@ -4,15 +4,14 @@ char message[192];
 bool targets[32+1];
 bool IsTeamChat;
 
-public Plugin myinfo =
-{
-	name        = "NT Dead Chat Spec",
-	author      = "bauxite, based on Root_ All Chat",
+public Plugin myinfo = {
+	name = "NT Dead Chat Spec",
+	author = "bauxite, based on Root_ All Chat",
 	description = "Allows dead players to text chat with living teammates, spectators can always chat with everyone",
-	version     = "0.3.0",
+	version = "0.3.0",
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookUserMessage(GetUserMessageId("SayText"), SayTextHook, false);
 	HookEvent("player_say", Event_PlayerSay, EventHookMode_Post);
