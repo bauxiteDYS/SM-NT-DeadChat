@@ -39,7 +39,7 @@ public Action SayTextHook(UserMsg msg_id, BfRead bf, const int[] players, int pl
 		targets[players[i]] = false;
 	}
 	
-	return Plugin_Handled;
+	return Plugin_Continue;
 }
 
 public void Event_PlayerSay(Event event, const char[] name, bool dontBroadcast)
