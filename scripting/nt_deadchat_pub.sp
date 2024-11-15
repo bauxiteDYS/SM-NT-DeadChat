@@ -14,7 +14,7 @@ public Plugin myinfo =
 	version = "0.3.0",
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	cvarAllChat = CreateConVar("sm_nt_all_chat", "0", "Enable to let everyone see all chat, or disable to allow just Specs", _, true, 0.0, true, 1.0);
 	HookConVarChange(cvarAllChat, Changed_AllChat);
