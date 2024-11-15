@@ -7,13 +7,13 @@ bool read = true;
 
 public Plugin myinfo =
 {
-	name        = "NT Dead Chat Spec",
-	author      = "bauxite, based on Root_ All Chat",
+	name = "NT Dead Chat Spec",
+	author = "bauxite, based on Root_ All Chat",
 	description = "Allows dead players to text chat with living teammates, spectators can always chat with everyone",
-	version     = "0.3.0",
+	version = "0.1.0",
 };
 
-public OnPluginStart()
+public void OnPluginStart()
 {
 	HookUserMessage(GetUserMessageId("SayText"), SayTextHook, false);
 	HookEvent("player_say", Event_PlayerSay, EventHookMode_Post);
@@ -100,11 +100,8 @@ public void Event_PlayerSay(Event event, const char[] name, bool dontBroadcast)
 	if (SayText != INVALID_HANDLE)
 	{
 		BfWriteByte(SayText, client);
-
 		BfWriteString(SayText, message);
-
 		BfWriteByte(SayText, -1);
-
 		EndMessage();
 	}
 }
