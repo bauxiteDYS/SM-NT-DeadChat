@@ -1,16 +1,15 @@
 #include <sourcemod>
 
-char message[256];
-
-bool targets[32 + 1];
+char message[192];
+bool targets[32+1];
 bool IsTeamChat;
 
 public Plugin myinfo =
 {
 	name        = "NT Dead Chat Spec",
-	author      = "Root, ported to NT by bauxite",
+	author      = "bauxite, based on Root_ All Chat",
 	description = "Allows dead players to text chat with living teammates, spectators can always chat with everyone",
-	version     = "0.1.1.spec",
+	version     = "0.3.0",
 };
 
 public OnPluginStart()
@@ -20,13 +19,13 @@ public OnPluginStart()
 }
 
 public Action OnClientSayCommand(int client, const char[] command, const char[] sArgs)
-{
+{	
+	IsTeamChat = StrEqual(command, "say_team", false);
+	
 	for (int target = 1; target <= MaxClients; target++)
 	{
 		targets[target] = true;
 	}
-	
-	IsTeamChat = StrEqual(command, "say_team", false);
 	
 	return Plugin_Continue;
 }
@@ -39,7 +38,8 @@ public Action SayTextHook(UserMsg msg_id, BfRead bf, const int[] players, int pl
 	{
 		targets[players[i]] = false;
 	}
-	return Plugin_Continue;
+	
+	return Plugin_Handled;
 }
 
 public void Event_PlayerSay(Event event, const char[] name, bool dontBroadcast)
@@ -51,37 +51,44 @@ public void Event_PlayerSay(Event event, const char[] name, bool dontBroadcast)
 
 	client = GetClientOfUserId(GetEventInt(event, "userid"));
 	
-	if (client != 0)
+	if (client <= 0 || client > MaxClients)
 	{
-		if (IsTeamChat)
+		return;
+	}
+	
+	if (IsTeamChat)
+	{
+		for (i = 1; i <= MaxClients; i++)
+		{
+			if (IsClientInGame(i) && GetClientTeam(i) == GetClientTeam(client) && targets[i])
+			{
+				clients[numClients++] = i;
+			}
+			
+			targets[i] = false;
+		}
+	}
+	else
+	{
+		if (GetClientTeam(client) == 1)
 		{
 			for (i = 1; i <= MaxClients; i++)
 			{
-				if (IsClientInGame(i) && GetClientTeam(i) == GetClientTeam(client) && targets[i])
+				if (IsClientInGame(i) && targets[i])
 				{
 					clients[numClients++] = i;
 				}
-			
+				
 				targets[i] = false;
 			}
 		}
-		else
-		{
-			if (GetClientTeam(client) == 1)
-			{
-				for (i = 1; i <= MaxClients; i++)
-				{
-					if (IsClientInGame(i) && targets[i])
-					{
-						clients[numClients++] = i;
-					}
-				
-					targets[i] = false;
-				}
-			}
-		}
 	}
-
+	
+	if(numClients == 0)
+	{
+		return;
+	}
+	
 	Handle SayText = StartMessage("SayText", clients, numClients, USERMSG_RELIABLE|USERMSG_BLOCKHOOKS);
 
 	if (SayText != INVALID_HANDLE)
